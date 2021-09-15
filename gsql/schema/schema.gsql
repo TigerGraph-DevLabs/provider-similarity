@@ -1,0 +1,124 @@
+USE GRAPH @graphname@
+
+DROP JOB ProviderSimilaritySchema
+
+BEGIN
+CREATE SCHEMA_CHANGE JOB ProviderSimilaritySchema FOR GRAPH @graphname@ { 
+    /*
+    indAttributes = ['NPI',
+    'Provider Last Name (Legal Name)',
+    'Provider First Name',
+    'Provider Middle Name',
+    'Provider Name Prefix Text',
+    'Provider Name Suffix Text',
+    'Provider Credential Text',
+    'NPI Deactivation Reason Code',
+    'NPI Deactivation Date',
+    'NPI Reactivation Date']
+    */
+
+    ADD VERTEX Individual(PRIMARY_ID npi STRING, lastName STRING, firstName STRING, middleName STRING, prefix STRING, suffix STRING, deactivationCode STRING, deactivationDate DATETIME, reactivationDate DATETIME, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    orgAttributes = ['NPI',
+    'Provider Organization Name (Legal Business Name)',
+    'NPI Deactivation Reason Code',
+    'NPI Deactivation Date',
+    'NPI Reactivation Date']
+    */
+
+    ADD VERTEX Organization(PRIMARY_ID npi STRING, organizationName STRING, deactivationCode STRING, deactivationDate DATETIME, reactivationDate DATETIME, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    Code,Grouping,Classification,Specialization,Definition,Notes,Display Name,Section
+    */
+
+    ADD VERTEX Taxonomy(PRIMARY_ID code STRING, definition STRING, notes STRING, displayName STRING, section STRING, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    Zipcode
+    */
+
+    ADD VERTEX ZipCode(PRIMARY_ID code STRING, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    State
+    */
+
+    ADD VERTEX State(PRIMARY_ID name STRING, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    City
+    */
+
+    ADD VERTEX City(PRIMARY_ID name STRING, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    Address
+    'Provider First Line Business Mailing Address',
+    'Provider Second Line Business Mailing Address',
+    'Provider Business Mailing Address City Name',
+    'Provider Business Mailing Address State Name',
+    'Provider Business Mailing Address Postal Code',
+    'Provider Business Mailing Address Country Code (If outside U.S.)'
+    */
+
+    ADD VERTEX Address(PRIMARY_ID firstLine STRING, secondLine STRING, embedding LIST<DOUBLE>) WITH STATS="OUTDEGREE_BY_EDGETYPE", PRIMARY_ID_AS_ATTRIBUTE="true";
+
+    /*
+    Individual Works for to Organization
+    */
+
+    ADD DIRECTED EDGE WORKS_FOR(FROM Individual, TO Organization) WITH REVERSE_EDGE="R_WORKS_FOR";
+
+    /*
+    Individual has Taxonomy
+    */
+
+    ADD DIRECTED EDGE INDIVIDUAL_HAS_TAXONOMY(FROM Individual, TO Taxonomy, primaryTaxonomy BOOL) WITH REVERSE_EDGE="R_HAS_TAXONOMY";
+
+    /*
+    Organization has Taxonomy
+    */
+
+    ADD DIRECTED EDGE ORGANIZATION_HAS_TAXONOMY(FROM Organization, TO Taxonomy, primaryTaxonomy BOOL) WITH REVERSE_EDGE="R_HAS_TAXONOMY";
+
+    /*
+    Taxonomy has SubGroup
+    */
+
+    ADD DIRECTED EDGE HAS_SUB_GROUP(FROM Taxonomy, TO Taxonomy) WITH REVERSE_EDGE="R_HAS_SUB_GROUP";
+
+    /*
+    Individual has Address
+    */
+
+    ADD DIRECTED EDGE HAS_ADDRESS(FROM Individual, TO Address) WITH REVERSE_EDGE="R_HAS_ADDRESS";
+
+    /*
+    Organization has Address
+    */
+
+    ADD DIRECTED EDGE HAS_ADDRESS(FROM Organization, TO Address) WITH REVERSE_EDGE="R_HAS_ADDRESS";
+
+    /*
+    Address in ZipCode
+    */
+
+    ADD DIRECTED EDGE ADDRESS_IN_ZIPCODE(FROM Address, TO ZipCode) WITH REVERSE_EDGE="R_ADDRESS_IN_ZIPCODE";
+
+    /*
+    Address in State
+    */
+
+    ADD DIRECTED EDGE ADDRESS_IN_STATE(FROM Address, TO State) WITH REVERSE_EDGE="R_ADDRESS_IN_STATE";
+
+    /*
+    Address in City
+    */
+
+    ADD DIRECTED EDGE ADDRESS_IN_CITY(FROM Address, TO City) WITH REVERSE_EDGE="R_ADDRESS_IN_CITY";
+}
+END
+
+RUN SCHEMA_CHANGE JOB ProviderSimilaritySchema
