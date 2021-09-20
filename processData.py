@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import csv
 
 chunksize = 50000
 filename = "./data/NPPES_Data_Dissemination_August_2021/npidata_pfile_20050523-20210808.csv"
@@ -167,36 +168,33 @@ def getTaxonomyCodesAndGroups(row):
     res = {"TaxonomyCodes": codes, "TaxonomyGroups":groups}
     return res
 
-for chunk in pd.read_csv(filename, chunksize=chunksize):
+for chunk in pd.read_csv(filename, chunksize=chunksize, dtype=str):
     edges = []
     df = chunk
-    indvs = df[df["Entity Type Code"] == 1] # Individuals are designated by 1
-    orgs = df[df["Entity Type Code"] == 2] # Organizations are designated by 2
+    indvs = df[df["Entity Type Code"] == '1'] # Individuals are designated by 1
+    orgs = df[df["Entity Type Code"] == '2'] # Organizations are designated by 2
 
     indvVertex = indvs[indAttributes]
-    indvVertex.to_csv(processedDir+"individuals.csv", mode="a", header=False)
+    indvVertex.to_csv(processedDir+"individuals.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
     orgVertex = orgs[orgAttributes]
-    orgVertex.to_csv(processedDir+"organizations.csv", mode="a", header=False)
-
-    geog = df[geogAttributes]
-    geog.to_csv(processedDir+"geography.csv", mode="a", header=False)
+    orgVertex.to_csv(processedDir+"organizations.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
 
     indvGeog = indvs[geogAttributes]
-    indvGeog.to_csv(processedDir+"indvGeography.csv", mode="a", header=False)
+    indvGeog.to_csv(processedDir+"indvGeography.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
 
     orgGeog = orgs[geogAttributes]
-    orgGeog.to_csv(processedDir+"orgGeography.csv", mode="a", header=False)
+    orgGeog.to_csv(processedDir+"orgGeography.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
     
     indvTaxCodeGroup = list(indvs.apply(getTaxonomyCodesAndGroups, axis=1))
     indvTaxonomy = pd.DataFrame([item for sublist in indvTaxCodeGroup for item in sublist["TaxonomyCodes"]])
-    indvTaxonomy.to_csv(processedDir+"indvTaxonomy.csv", mode="a", header=False)
+    indvTaxonomy.to_csv(processedDir+"indvTaxonomy.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
 
     indvGroup = pd.DataFrame([item for sublist in indvTaxCodeGroup for item in sublist["TaxonomyGroups"]])
-    indvGroup.to_csv(processedDir+"indvGroup.csv", mode="a", header=False)
+    indvGroup.to_csv(processedDir+"indvGroup.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
 
     orgTaxCodeGroup = list(orgs.apply(getTaxonomyCodesAndGroups, axis=1))
     orgTaxonomy = pd.DataFrame([item for sublist in orgTaxCodeGroup for item in sublist["TaxonomyCodes"]])
-    orgTaxonomy.to_csv(processedDir+"orgTaxonomy.csv", mode="a", header=False)
+    orgTaxonomy.to_csv(processedDir+"orgTaxonomy.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
     
     orgGroup = pd.DataFrame([item for sublist in orgTaxCodeGroup for item in sublist["TaxonomyGroups"]])
-    orgGroup.to_csv(processedDir+"orgGroup.csv", mode="a", header=False)
+    orgGroup.to_csv(processedDir+"orgGroup.csv", mode="a", header=False, quoting=csv.QUOTE_ALL)
