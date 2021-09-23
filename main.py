@@ -43,12 +43,13 @@ def main(args):
         schemaDef = schemaDef.replace('@graphname@', args.graphname)
         print(conn.gsql("CREATE GRAPH "+args.graphname+"(*)", options=[]))
         out = conn.gsql(schemaDef)
-        
-        token = conn.getToken(conn.createSecret())[0]
-        if args.all:
-            conn.apiToken = token
-        print("API TOKEN CREATED:", token)
-        
+        '''
+        if conn.host != "http://localhost" or conn.host != "http://127.0.0.1":
+            token = conn.getToken(conn.createSecret())[0]
+            if args.all:
+                conn.apiToken = token
+            print("API TOKEN CREATED:", token)
+        '''
         print(out)
     ''' LOADING DATA '''
     ldrs = [x for x in dir(loaders) if "__" not in x]
