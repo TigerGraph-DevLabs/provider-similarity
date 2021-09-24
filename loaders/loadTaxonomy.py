@@ -15,13 +15,19 @@ def load(conn, file1="./data/nucc_taxonomy_211.csv", **kwargs):
     
     edges = df[["Code", "Super"]].drop_duplicates().dropna()
     records = edges.to_dict(orient="records")
-    edges = [(x["Super"], x["Code"], {}) for x in records]
+    edges = [(x["Super"], x["Code"], {}) for x in records if x["Super"] != x["Code"]]
     numEdges = conn.upsertEdges("Taxonomy", "HAS_SUB_GROUP", "Taxonomy", edges)
 
     df.fillna("", inplace=True)
     #['Code', 'Grouping', 'Classification', 'Specialization', 'Definition', 'Notes', 'Display Name', 'Section']
     conn.upsertVertexDataFrame(df, "Taxonomy", v_id="Code", attributes={"definition":"Definition", "notes": "Notes", "displayName": "Display Name"})
 
-    grouping = df[["Grouping", "Classification"]].drop_duplicates().merge(df)
+    grouping = df[df["Super"] == ""]
 
     conn.upsertEdgeDataFrame(grouping, "Taxonomy", "HAS_SUB_GROUP", "Taxonomy", "Grouping", "Code", {})
+
+    conn.upsertVertex("Taxonomy", "ROOT", attributes={})
+
+    groupings = df["Grouping"].unique()
+    edges = [("ROOT", x, {}) for x in groupings]
+    conn.upsertEdges("Taxonomy", "HAS_SUB_GROUP", "Taxonomy", edges)
