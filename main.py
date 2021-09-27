@@ -97,6 +97,9 @@ def main(args):
     if args.echo or args.all:
         print("======== ECHO ========")
         print(conn.echo())
+    if args.stats or args.all:
+        print("======== STATS ========")
+        print(conn.getStatistics())
     print("======== PROCESS COMPLETE ========")
 
 if __name__ == "__main__":
@@ -125,6 +128,7 @@ if __name__ == "__main__":
     tArgs.add_argument("--loadAllData", "-ld", nargs="?", const=True, help="Loads All Data")
     tArgs.add_argument("--installAllQueries", "-iq", nargs="?", const=True, help="Installs All Queries, optionally takes path to query folder")
     tArgs.add_argument("--echo", "-e", nargs="?", const=True, help="Runs echo")
+    tArgs.add_argument("--stats", "s", nargs="?", const=True, help="Prints Stats")
 
     for ldr in ldrs:
         tArgs.add_argument("--"+ldr, nargs="*", action="append", help="Specify file paths [file1, file2, ...]")

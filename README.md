@@ -5,9 +5,9 @@ Demo Repository for Provider Similarity using Graph Embeddings using TigerGraph
 To get started, create a Python virtual environment through virtualenv or conda. Then run ```pip install -r requirements.txt```
 
 ## Data
-The data is from two different sources, one of which is individual providers and organizations using the NPI system, and the taxonomic codes describing their role. That dataset is found here: [https://download.cms.gov/nppes/NPI_Files.html](https://download.cms.gov/nppes/NPI_Files.html)
+The data is from two different sources, one of which is individual providers and organizations using the NPI system, and the taxonomic codes describing their role. That dataset is found here: [https://download.cms.gov/nppes/NPI_Files.html](https://download.cms.gov/nppes/NPI_Files.html) [**Direct Download**](https://download.cms.gov/nppes/NPPES_Data_Dissemination_September_2021.zip)
 
-The second data source describes the taxnomic system describing individuals' and organizations' roles. This data can be downloaded here: [https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57](https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57)
+The second data source describes the taxnomic system describing individuals' and organizations' roles. This data can be downloaded here: [https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57](https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57) [**Direct Download**](https://www.nucc.org/images/stories/CSV/nucc_taxonomy_211.csv)
 
 ### Processing the Data
 The file ```processData.py``` processes the NPI files, and outputs cleaned CSVs inside of a processedData directory. To run this, unzip the NPI files into a folder inside a ```data/``` directory you create inside the main project directory. Then, run ```python processData.py```, which will read the files in and produce the cleaned file formats needed to load into the TigerGraph instance.
