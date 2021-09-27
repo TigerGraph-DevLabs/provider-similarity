@@ -99,7 +99,8 @@ def main(args):
         print(conn.echo())
     if args.stats or args.all:
         print("======== STATS ========")
-        print(conn.getStatistics())
+        print(conn.getVertexCount("*"))
+        print(conn.getEdgeCount("*"))
     print("======== PROCESS COMPLETE ========")
 
 if __name__ == "__main__":
