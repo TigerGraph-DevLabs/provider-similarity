@@ -3,7 +3,7 @@ import os
 import csv
 
 chunksize = 50000
-filename = "./data/NPPES_Data_Dissemination_August_2021/npidata_pfile_20050523-20210808.csv"
+filename = "./data/NPPES_Data_Dissemination_September_2021/npidata_pfile_20050523-20210912.csv"
 processedDir = "./data/processedData/"
 
 for f in os.listdir(processedDir):
