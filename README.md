@@ -34,7 +34,12 @@ python main.py --loadIndvOrgTax
 ```
 
 ### UDF Installation
-To use the graph embedding and the embedding cosine similarity algorithms, there needs to be some TigerGraph UDFs installed beforehand. To do this, follow the directions [here](), and add the UDFs found in the ```gsql/udfs/``` directory.
+#### Installing Eigen
+Eigen is a C++ library used for matrix operations. The UDFs we are installing utilize Eigen, and therefore we need to install it before installing UDFs. 
+
+#### UDF Installation
+To use the graph embedding and the embedding cosine similarity algorithms, there needs to be some TigerGraph UDFs installed beforehand. The ```ExprUtil.hpp``` and ```ExprFunctions.hpp``` files in ```gsql/udfs/``` should replace the default files found in the TigerGraph system. For more details about installing UDFs, check out the documentation [here]()
+
 
 ### Query Installation
 
