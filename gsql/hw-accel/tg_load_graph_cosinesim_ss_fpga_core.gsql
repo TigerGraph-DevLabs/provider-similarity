@@ -1,0 +1,12 @@
+CREATE QUERY load_graph_cosinesim_ss_fpga_core(SET<STRING> vert_types) FOR GRAPH ProviderSimilarity {
+    ListAccum<ListAccum<int> > @@vectors;
+    ListAccum<UINT> @@vids;
+    int ret;
+
+    population = {vert_types};
+    patientList = select p from population:p
+        ACCUM @@vectors += p.fastrp_embedding, @@vids += getvid(p);
+
+    ret = udf_xilinx_recom_load_population_vectors(@@vectors, @@vids);
+    PRINT ret;
+}

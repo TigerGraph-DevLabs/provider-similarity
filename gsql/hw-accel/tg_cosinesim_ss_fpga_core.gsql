@@ -1,0 +1,10 @@
+CREATE QUERY tg_cosinesim_ss_fpga_core (VERTEX source, UINT topK) FOR 
+    GRAPH ProviderSimilarity {
+    ListAccum<XilCosinesimMatch> @@results;
+    ListAccum<int> @@targetVec;
+    s = {source};
+    res = SELECT p FROM s:p ACCUM @@targetVec += p.fastrp_embedding;
+
+    @@results = udf_xilinx_recom_match_target_vector(topK, @@targetVec);
+    PRINT @@results;
+}
