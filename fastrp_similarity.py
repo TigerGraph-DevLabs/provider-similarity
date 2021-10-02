@@ -27,7 +27,8 @@ if embed:
     t2 = time.time()
     print("Time Elapsed: %.2f Seconds" % (t2-t1))
 
-providers = []
+providers = ["1790766392", "1669475711", "1154324184", "1275536443", "1225031859",
+             "1114920642", "1366444697", "1417959669", "1386318749", "1659576965"]
 times = []
 for provider in providers:
     params = {"v1": provider,
