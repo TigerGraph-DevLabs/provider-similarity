@@ -10,11 +10,11 @@ CREATE QUERY tg_embedding_cosine_similarity(VERTEX v1, SET<STRING> vert_types, I
   info = SELECT s
          FROM v1_set:s
          POST-ACCUM
-            @@embedding1 += s.fastrp_embedding;
+            @@embedding1 += doubleListToInt(s.fastrp_embedding, s.fastrp_embedding.size(), 10);
   res = SELECT s
          FROM start:s WHERE s != v1
          ACCUM
-            @@embeddings += (s.vert_index->s.fastrp_embedding);
+            @@embeddings += (s.vert_index->doubleListToInt(s.fastrp_embedding, s.fastrp_embedding.size(), 10));
   
   @@similarity = cosine_similarity(@@embedding1, @@embeddings, embeddingDim);
   kMostSimilar = SELECT s FROM start:s POST-ACCUM s.@similarityScore += @@similarity.get(s.vert_index) ORDER BY s.@similarityScore DESC LIMIT k;

@@ -12,7 +12,7 @@ if preprocess:
 
 # %%
 import time
-
+'''
 params = {"num_nodes": 6_815_739,
           "num_edges": 16_201_798,
           "k": 3,
@@ -32,22 +32,25 @@ t2 = time.time()
 
 # %%
 print("Time Elapsed: %.2f Seconds" % (t2-t1))
-
+'''
 # %%
-params = {"v1": "207WX0120X",
-          "v1.type": "Taxonomy",
-          "vert_types": "Taxonomy", 
+params = {"v1": "1790766392",
+          "v1.type": "Individual",
+          "vert_types": "Individual", 
           "embeddingDim": 200,
-          "k": 5}
+          "k": 10}
 
+t1 = time.time()
 res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params)[0]["kMostSimilar"]
-
+t2 = time.time()
 
 # %%
+print("Time Elapsed:", t2-t1)
+print("Most Similar to Code:", params["v1"])
 for r in res:
-    print("Most Similar to Code:", params["v1"])
     print(r["v_id"], r["attributes"]["@similarityScore"])
 
+"""
 
 # %%
 params = {"v1": "1457353518",
@@ -56,7 +59,7 @@ params = {"v1": "1457353518",
           "embeddingDim": 200,
           "k": 5}
 
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=64_000)[0]["kMostSimilar"]
+res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
 
 
 # %%
@@ -72,7 +75,7 @@ params = {"v1": "1912997503",
           "embeddingDim": 200,
           "k": 5}
 
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=64_000)[0]["kMostSimilar"]
+res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
 for r in res:
     print("Most Similar to Individual:", params["v1"])
     print(r["v_id"], r["attributes"]["@similarityScore"])
@@ -119,13 +122,11 @@ params = {"v1": "1790766392",
           "embeddingDim": 200,
           "k": 5}
 
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=64_000)[0]["kMostSimilar"]
+res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
 for r in res:
     print("Most Similar to Individual:", params["v1"])
     print(r["v_id"], r["attributes"]["@similarityScore"])
 
 
 # %%
-
-
-
+"""
