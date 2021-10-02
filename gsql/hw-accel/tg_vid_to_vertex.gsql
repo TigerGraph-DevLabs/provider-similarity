@@ -1,5 +1,0 @@
-CREATE QUERY tg_vid_to_vertex(INT v_id) {
-    s = {ANY};
-    res = SELECT r FROM s:r WHERE getvid(r) == v_id;
-    PRINT res;
-}

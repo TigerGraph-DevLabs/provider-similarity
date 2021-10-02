@@ -129,6 +129,14 @@ inline int random_range(int start, int end){
     return results;
   }  
 
+  inline ListAccum<int> doubleListToInt(ListAccum<double> input, int d, int multiplier){
+    ListAccum<int> tmp;
+    for (int j = 0; j < d; j++) {
+        tmp.data_.push_back((int) (input.get(j)*multiplier));
+    }
+    return tmp;
+  }
+
   inline MapAccum<int, ListAccum<double>> fastRP(MapAccum<int, int> degree_diagonal, ListAccum<ListAccum<int>> edge_list, int m, int n, int k, int s, int d, double beta, string input_weights) {
   // parameters
   std::ofstream foutput("/home/tigergraph/parameters.txt");
