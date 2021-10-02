@@ -1,6 +1,3 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
-# %%
 import pyTigerGraph as tg
 conn = tg.TigerGraphConnection(host="http://1.1.1.13", graphname="ProviderSimilarity")
 
@@ -10,123 +7,45 @@ if preprocess:
     conn.runInstalledQuery("tg_fastRP_preprocessing", params={"index_attr": "vert_index"}, timeout=4_096_000)
     print("Preprossing Complete")
 
-# %%
 import time
-'''
-params = {"num_nodes": 6_815_739,
-          "num_edges": 16_201_798,
-          "k": 3,
-          "sampling_constant": 3,
-          "reduced_dimension": 200,
-          "normalization_strength": -0.1,
-          "input_weights": "1,2,4", 
-          "index_attr": "vert_index",
-          "print_accum": False,
-          "result_attr": "fastrp_embedding"}
+embed = False
+if embed:
+    params = {"num_nodes": 6_815_739,
+            "num_edges": 16_201_798,
+            "k": 3,
+            "sampling_constant": 3,
+            "reduced_dimension": 200,
+            "normalization_strength": -0.1,
+            "input_weights": "1,2,4", 
+            "index_attr": "vert_index",
+            "print_accum": False,
+            "result_attr": "fastrp_embedding"}
 
-print("RUNNING FASTRP EMBEDDING")
-t1 = time.time()
-conn.runInstalledQuery("tg_fastRP", params=params, timeout=1_024_000)
-t2 = time.time()
+    print("RUNNING FASTRP EMBEDDING")
+    t1 = time.time()
+    conn.runInstalledQuery("tg_fastRP", params=params, timeout=1_024_000)
+    t2 = time.time()
+    print("Time Elapsed: %.2f Seconds" % (t2-t1))
 
+providers = []
+times = []
+for provider in providers:
+    params = {"v1": provider,
+            "v1.type": "Individual",
+            "vert_types": "Individual", 
+            "embeddingDim": 200,
+            "k": 10}
 
-# %%
-print("Time Elapsed: %.2f Seconds" % (t2-t1))
-'''
-# %%
-params = {"v1": "1790766392",
-          "v1.type": "Individual",
-          "vert_types": "Individual", 
-          "embeddingDim": 200,
-          "k": 10}
+    t1 = time.time()
+    res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params)[0]["kMostSimilar"]
+    t2 = time.time()
 
-t1 = time.time()
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params)[0]["kMostSimilar"]
-t2 = time.time()
+    print("Time Elapsed:", t2-t1)
+    print("Most Similar to Individual:", provider)
+    for r in res:
+        print(r["v_id"], r["attributes"]["@similarityScore"])
+    print()
+    times.append(t2-t1)
 
-# %%
-print("Time Elapsed:", t2-t1)
-print("Most Similar to Code:", params["v1"])
-for r in res:
-    print(r["v_id"], r["attributes"]["@similarityScore"])
-
-"""
-
-# %%
-params = {"v1": "1457353518",
-          "v1.type": "Individual",
-          "vert_types": "Individual", 
-          "embeddingDim": 200,
-          "k": 5}
-
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
-
-
-# %%
-for r in res:
-    print("Most Similar to Individual:", params["v1"])
-    print(r["v_id"], r["attributes"]["@similarityScore"])
-
-
-# %%
-params = {"v1": "1912997503",
-          "v1.type": "Individual",
-          "vert_types": "Individual", 
-          "embeddingDim": 200,
-          "k": 5}
-
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
-for r in res:
-    print("Most Similar to Individual:", params["v1"])
-    print(r["v_id"], r["attributes"]["@similarityScore"])
-
-'''
-# %%
-params = {"v1": "1457353518", 
-          "v1.type": "Individual", 
-          "v2": "1912997503", 
-          "v2.type": "Individual",
-          "embedding_dim": 128}
-
-conn.runInstalledQuery("tg_embedding_pairwise_cosine_similarity", params=params)[0]["similarity"]
-
-
-# %%
-# Two individuals only described by 207RA0000X taxonomy
-
-params = {"v1": "1316025943", 
-          "v1.type": "Individual", 
-          "v2": "1306802426", 
-          "v2.type": "Individual",
-          "embedding_dim": 128}
-
-conn.runInstalledQuery("tg_embedding_pairwise_cosine_similarity", params=params)[0]["similarity"]
-
-
-# %%
-# Two individuals - both described by 207RA0000X taxonomy, but 1790766392 also has 2 other codes
-
-params = {"v1": "1316025943", 
-          "v1.type": "Individual", 
-          "v2": "1790766392", 
-          "v2.type": "Individual",
-          "embedding_dim": 128}
-
-conn.runInstalledQuery("tg_embedding_pairwise_cosine_similarity", params=params)[0]["similarity"]
-
-'''
-# %%
-params = {"v1": "1790766392",
-          "v1.type": "Individual",
-          "vert_types": "Individual", 
-          "embeddingDim": 200,
-          "k": 5}
-
-res = conn.runInstalledQuery("tg_embedding_cosine_similarity", params=params, timeout=128_000)[0]["kMostSimilar"]
-for r in res:
-    print("Most Similar to Individual:", params["v1"])
-    print(r["v_id"], r["attributes"]["@similarityScore"])
-
-
-# %%
-"""
+print("===== Average Time Elapsed =====")
+print(sum(times)/len(times), "Seconds")

@@ -12,15 +12,20 @@ if not precached:
 
 targetId = "1790766392"
 #top10 = conn.runInstalledQuery("tg_cosinesim_ss_fpga_core", params={"source": "1457353518", "source.type": "Individual", "topK": 10})[0]["@@results"]
+providers = []
+times = []
+for provider in providers:
+    t1 = time.time()
+    top10 = conn.runInstalledQuery("tg_cosinesim_ss_fpga_core", params={"source": targetId, "source.type": "Individual", "topK": 10})[0]["@@results"]
+    t2 = time.time()
+    #print(top10)
+    print("Time Elapsed:", t2-t1)
+    print('Most Similar to Individual:', targetId)
+    for v in top10:
+        print(v["Id"], v["score"])
+    print()
+    times.append(t2-t1)
 
-t1 = time.time()
-top10 = conn.runInstalledQuery("tg_cosinesim_ss_fpga_core", params={"source": targetId, "source.type": "Individual", "topK": 10})[0]["@@results"]
-t2 = time.time()
-#print(top10)
-print("Time Elapsed:", t2-t1)
-print('Most Similar to Individual:', targetId)
-for v in top10:
-    #print(conn.runInstalledQuery("tg_vid_to_vertex", params={"v_id": int(v["Id"])}))
-    #print(conn.runInstalledQuery("tg_vid_to_vertex", params={"v_id": v["Id"]}))
-    print(v["Id"], v["score"])
+print("===== Average Time Elapsed =====")
+print(sum(times)/len(times), "Seconds")
     
