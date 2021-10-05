@@ -1,0 +1,3 @@
+CREATE QUERY cosinesim_set_num_devices(UINT num_devices) FOR GRAPH ProviderSimilarity {
+    udf_xilinx_recom_set_num_devices(num_devices);
+}
