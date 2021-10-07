@@ -38,12 +38,19 @@ python main.py --loadIndvOrgTax
 Eigen is a C++ library used for matrix operations. The UDFs we are installing utilize Eigen, and therefore we need to install it before installing UDFs. 
 
 #### UDF Installation
-To use the graph embedding and the embedding cosine similarity algorithms, there needs to be some TigerGraph UDFs installed beforehand. The ```ExprUtil.hpp``` and ```ExprFunctions.hpp``` files in ```gsql/udfs/``` should replace the default files found in the TigerGraph system. For more details about installing UDFs, check out the documentation [here]()
+To use the graph embedding and the embedding cosine similarity algorithms, there needs to be some TigerGraph UDFs installed beforehand. The ```ExprUtil.hpp``` and ```ExprFunctions.hpp``` files in ```gsql/udfs/``` should replace the default files found in the TigerGraph system. For more details about installing UDFs, check out the documentation [here](https://docs.tigergraph.com/dev/gsql-ref/querying/func/query-user-defined-functions)
 
 
 ### Query Installation
+All the necessary GSQL queries are found in ```gsql/queries/```. However, for the most recent versions of these queries, look at the TigerGraph In-Database Graph Data Science Library, found here: [https://github.com/tigergraph/gsql-graph-algorithms](https://github.com/tigergraph/gsql-graph-algorithms). We can install all of the algorithms by running ```python main.py -iq``` in your Python virtual environment.
 
-## Graph Embedding Algorithms
+## Graph Embedding Algorithm
+For this demo, we are using a vertex embedding algorithm called [FastRP](https://arxiv.org/abs/1908.11512). This algorithm is very fast in producing low-dimensional representations of a vertex's location in the graph. To run FastRP, we can either use ```fastrp_similarity.py``` file, or the ```find_similar.ipynb``` notebook. In both instances, there are boolean flags that need to be changed to match what processes you want to run. Before running FastRP for the first time, you first have to run the tg_fastRP_preprocessing query first, which is controlled with the preprocess variable. Likewise, once the vertices are embedded, we can set the embed variable to false to not recompute the embeddings.
 
+Once the FastRP algorithm has run, then we can compare each provider to every other provider using cosine similarity on the embeddings. Both the notebook and Python script run this process.
 
 ## Hardware Acceleration
+For more on hardware acceleration, refer to the [Xilinx Graph Database Analytics Library](https://xilinx.github.io/graphanalytics/) documentation. The queries needed for hardware acceleration are found in ```gsql/hw-accel```.
+
+## More Information
+For more information, feel free to reach out. Open a GitHub issue or message in [Discord](https://discord.gg/vFbmPyvJJN) or post on the [Community](https://community.tigergraph.com) fourm.
